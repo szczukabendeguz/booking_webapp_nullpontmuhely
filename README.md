@@ -1,36 +1,112 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Nullpont Műhely - Rágcsálóirtás Weboldal
 
-## Getting Started
+Ez a projekt a Nullpont Műhely "Rágcsálóirtás" című előadásának/eseményének hivatalos weboldala és jegyfoglalási rendszere.
 
-First, run the development server:
+**Élő megtekintés:** [nullpontmuhely.hu](https://nullpontmuhely.hu)
+
+## Technológiai Stack
+
+A projekt modern webes technológiákra épül, szétválasztva a frontend megjelenítést és a backend logikát a Next.js keretrendszeren belül.
+
+### Frontend
+
+A felhasználói felület, animációk és interakciók.
+
+[![Frontend Skills](https://skillicons.dev/icons?i=nextjs,react,ts,bootstrap,sass,html,css)](https://skillicons.dev)
+
+- **Framework**: Next.js 16 (App Router)
+- **Nyelv**: TypeScript
+- **UI Könyvtár**: Bootstrap 5 & React Bootstrap
+- **Stílus**: SCSS (Sass) moduláris felépítésben
+
+### Backend & Szolgáltatások
+
+A szerver oldali logika, API végpontok és adatkezelés.
+
+[![Backend Skills](https://skillicons.dev/icons?i=nodejs,nextjs)](https://skillicons.dev)
+
+- **Runtime**: Node.js (Next.js API Routes)
+- **Adattárolás**: JSON alapú fájlrendszer (NoSQL-szerű, szerver-oldali `fs` műveletekkel)
+- **Email Küldés**: Resend API
+- **Templating**: React Email
+
+## Rendszer Működése Részletesen
+
+### 1. Jegyfoglalás Menete
+
+A foglalási rendszer egy egyszerű, de robusztus fájl-alapú adatbázist használ a `data/reservations.json` fájlban.
+
+1. **Kérés**: A felhasználó kitölti az űrlapot, ami egy `POST` kérést küld a `/api/book` végpontra.
+2. **Validáció**: A szerver ellenőrzi a bemeneti adatokat (dátum, név, email, jegyek száma).
+3. **Kapacitás Ellenőrzés**:
+   - A rendszer beolvassa az aktuális foglalásokat.
+   - Összegzi az adott dátumra már eladott jegyeket.
+   - Ha az új igénnyel együtt meghaladná a 60 főt, a kérést elutasítja és visszaküldi a még elérhető helyek számát.
+4. **Perzisztencia**: Sikeres ellenőrzés esetén az új foglalás hozzáadódik a JSON struktúrához, és a rendszer felülírja a fájlt az új adatokkal (atomicity nincs garantálva nagy terhelésnél, de kis forgalomra optimalizált).
+
+### 2. Email Küldés
+
+Az email küldés szorosan integrálva van a foglalási folyamatba, de aszinkron módon kezeljük a hibákat, hogy a foglalás akkor is sikeres legyen, ha az email szolgáltató épp nem elérhető.
+
+- **Szolgáltató**: [Resend](https://resend.com)
+- **Technológia**: A `resend` npm csomagot használjuk a Next.js API route-on belül.
+- **Sablon**: A levelek kinézetét React komponensként definiáljuk (`EmailTemplate`), így biztosítva, hogy a stílusok konziszensek és könnyen szerkeszthetők legyenek.
+- **Folyamat**: Amint a foglalás sikeresen mentésre került a JSON adatbázisba, a rendszer meghívja a Resend API-t a megadott felhasználói email címmel és a foglalás részleteivel.
+
+## Telepítés és Futtatás
+
+### Előfeltételek
+
+- Node.js (v18+)
+- npm
+
+### 1. Függőségek telepítése
+
+```bash
+npm install
+```
+
+### 2. Környezeti Változók beállítása
+
+Hozz létre egy `.env.local` fájlt a projekt gyökerében:
+
+```env
+# Resend API kulcs az emailek küldéséhez (kötelező az email funkcióhoz)
+RESEND_API_KEY=re_123456789...
+
+# Opcionális: Admin jelszó
+ADMIN_PASSWORD=sajat_titkos_jelszo
+```
+
+### 3. Fejlesztői szerver indítása
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+A weboldal elérhető lesz a `http://localhost:3000` címen.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### 4. Build (Élesítéshez)
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```bash
+npm run build
+npm run start
+```
 
-## Learn More
+## Adatszerkezet (`data/reservations.json`)
 
-To learn more about Next.js, take a look at the following resources:
+Az adatok dátum kulcsok alatt tárolt tömbökben helyezkednek el:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+```json
+{
+  "2026-02-21": [
+    {
+      "id": "uuid-v4",
+      "name": "Teszt Elek",
+      "email": "teszt@example.com",
+      "count": 2,
+      "timestamp": "2026-01-28T10:00:00.000Z"
+    }
+  ]
+}
+```
