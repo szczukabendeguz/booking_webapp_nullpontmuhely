@@ -1,8 +1,13 @@
 # Nullpont Műhely - Rágcsálóirtás | Event Booking System
 
-[![Live Demo](https://img.shields.io/badge/Live%20Demo-nullpontmuhely.hu-blue?style=for-the-badge&logo=google-chrome)](https://nullpontmuhely.hu)
+> [!IMPORTANT]
+> **DEMO MODE:** This project is currently in a **Static Demo Mode** for archival and presentation purposes. 
+> - The backend is mocked using `localStorage` (all data stays in your browser).
+> - Real emails are **not** sent.
+> - The site is hosted as a static export (GitHub Pages).
 
 ---
+
 
 ## 🇬🇧 English
 
@@ -152,6 +157,14 @@ booking_webapp_nullpontmuhely/
 ---
 
 ## 🇭🇺 Magyar
+
+> [!IMPORTANT]
+> **DEMO MÓD:** Ez a projekt jelenleg **Statikus Demó Módban** működik archiválási és prezentációs célokból.
+> - A backend szimulált, az adatok a böngésző `localStorage`-ában tárolódnak.
+> - Valódi visszaigazoló emaileket a rendszer **nem** küld.
+> - Az oldal statikus exportként (GitHub Pages) üzemel.
+
+---
 
 ### 📖 Projekt Leírás
 

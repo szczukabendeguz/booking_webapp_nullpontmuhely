@@ -2,6 +2,8 @@
 
 import { useState, useEffect } from 'react';
 
+import { getAvailability, bookTickets } from '../lib/mockApi';
+
 interface Availability {
     [date: string]: number;
 }
@@ -21,11 +23,8 @@ export default function BookingForm() {
 
     const fetchAvailability = async () => {
         try {
-            const res = await fetch('/api/availability');
-            if (res.ok) {
-                const data = await res.json();
-                setAvailability(data);
-            }
+            const data = await getAvailability();
+            setAvailability(data);
         } catch (error) {
             console.error('Failed to fetch availability', error);
         }
@@ -37,31 +36,20 @@ export default function BookingForm() {
         setMessage('');
 
         try {
-            const res = await fetch('/api/book', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ date: selectedDate, name, email, count }),
-            });
-
-            const data = await res.json();
-
-            if (res.ok) {
-                setStatus('success');
-                setMessage('Köszönjük! A részletekről hamarosan emailt küldünk.');
-                // Refresh availability
-                fetchAvailability();
-                // Reset form
-                setName('');
-                setEmail('');
-                setCount(1);
-                setSelectedDate('');
-            } else {
-                setStatus('error');
-                setMessage(data.error || 'Hiba történt a foglalás során.');
-            }
-        } catch (error) {
+            await bookTickets(selectedDate, name, email, count);
+            
+            setStatus('success');
+            setMessage('Köszönjük! (Ez egy DEMO: valódi emailt nem küldünk, de a foglalás elmentve a böngészőben.)');
+            // Refresh availability
+            fetchAvailability();
+            // Reset form
+            setName('');
+            setEmail('');
+            setCount(1);
+            setSelectedDate('');
+        } catch (error: any) {
             setStatus('error');
-            setMessage('Hálózati hiba történt.');
+            setMessage(error.message || 'Hiba történt a foglalás során.');
         }
     };
 

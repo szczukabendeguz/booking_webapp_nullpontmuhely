@@ -4,6 +4,8 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Container, Row, Col, Form, Button, Alert, Card } from 'react-bootstrap';
 
+import { login } from '../../lib/mockApi';
+
 export default function AdminLogin() {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
@@ -15,20 +17,10 @@ export default function AdminLogin() {
         setError('');
 
         try {
-            const res = await fetch('/api/admin/login', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ username, password }),
-            });
-
-            if (res.ok) {
-                router.push('/admin');
-            } else {
-                const data = await res.json();
-                setError(data.error || 'Login failed');
-            }
-        } catch (err) {
-            setError('An error occurred. Please try again.');
+            await login(username, password);
+            router.push('/admin');
+        } catch (err: any) {
+            setError(err.message || 'Hibás bejelentkezés (Próbálja: admin / admin)');
         }
     };
 

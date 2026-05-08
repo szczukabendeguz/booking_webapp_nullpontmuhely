@@ -4,6 +4,8 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Container, Row, Col, Table, Button, Alert, Badge, Spinner } from 'react-bootstrap';
 
+import { getReservations, deleteReservation, logout, isAuthenticated } from '../lib/mockApi';
+
 interface Reservation {
     id: string;
     name: string;
@@ -24,16 +26,14 @@ export default function AdminDashboard() {
 
     const fetchData = async () => {
         try {
-            const res = await fetch('/api/admin/reservations');
-            if (res.ok) {
-                const db = await res.json();
-                setData(db);
-            } else {
-                if (res.status === 401) router.push('/admin/login');
-                else setError('Failed to fetch data');
+            if (!isAuthenticated()) {
+                router.push('/admin/login');
+                return;
             }
+            const db = await getReservations();
+            setData(db);
         } catch (err) {
-            setError('An error occurred');
+            setError('Hiba történt az adatok lekérésekor');
         } finally {
             setLoading(false);
         }
@@ -44,25 +44,18 @@ export default function AdminDashboard() {
     }, []);
 
     const handleLogout = async () => {
-        await fetch('/api/admin/logout', { method: 'POST' });
+        logout();
         router.push('/admin/login');
     };
 
     const handleDelete = async (date: string, id: string) => {
-        if (!confirm('Are you sure you want to delete this reservation?')) return;
+        if (!confirm('Biztosan törölni szeretné ezt a foglalást?')) return;
 
         try {
-            const res = await fetch(`/api/admin/reservations?date=${date}&id=${id}`, {
-                method: 'DELETE',
-            });
-
-            if (res.ok) {
-                fetchData(); // Refresh data
-            } else {
-                alert('Failed to delete reservation');
-            }
+            await deleteReservation(date, id);
+            fetchData(); // Refresh data
         } catch (err) {
-            alert('Error deleting reservation');
+            alert('Hiba történt a törlés során');
         }
     };
 
