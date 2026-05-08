@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Special_Elite } from "next/font/google";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./globals.scss";
+import Link from "next/link";
 
 const specialElite = Special_Elite({
   weight: "400",
@@ -40,9 +41,9 @@ export default function RootLayout({
             <strong>DEMO MÓD</strong><br/>
             <span style={{ fontSize: '0.7rem', opacity: 0.8 }}>A projekt nem aktuális.</span>
           </div>
-          <a href="/admin/login/" className="btn btn-dark btn-sm fw-bold" style={{ fontSize: '0.7rem' }}>
+          <Link href="/admin/login/" className="btn btn-dark btn-sm fw-bold" style={{ fontSize: '0.7rem' }}>
             ADMIN
-          </a>
+          </Link>
         </div>
         {children}
       </body>

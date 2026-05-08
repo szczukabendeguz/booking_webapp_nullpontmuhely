@@ -6,9 +6,9 @@ export default function Home() {
       <div className="container py-5">
         <div className="row justify-content-center">
           <div className="col-12 col-md-10 col-lg-8 col-xl-6">
-            <img src="/rágcsálóírtás_szinezett_0002_0000s_0004_nullpont.png" alt="" className="w-100 mb-3" />
-            <img src="/rágcsálóírtás_szinezett_0002_0000s_0005_Rágcsálóirtás.png" alt="" className="w-100 mb-3" />
-            <img src="/rágcsálóírtás_szinezett_0002_0000s_0003_agatha-kriszti-című.png" alt="" className="w-100 mb-4" />
+            <img src="/booking_webapp_nullpontmuhely/rágcsálóírtás_szinezett_0002_0000s_0004_nullpont.png" alt="" className="w-100 mb-3" />
+            <img src="/booking_webapp_nullpontmuhely/rágcsálóírtás_szinezett_0002_0000s_0005_Rágcsálóirtás.png" alt="" className="w-100 mb-3" />
+            <img src="/booking_webapp_nullpontmuhely/rágcsálóírtás_szinezett_0002_0000s_0003_agatha-kriszti-című.png" alt="" className="w-100 mb-4" />
             <BookingForm />
             <div className="text-center mt-4 text-white-50">
               <p className="mb-1">Helyszín: Katakomba Pinceszínház</p>
@@ -22,7 +22,7 @@ export default function Home() {
       <footer className="w-100 mt-auto py-3 text-center">
         <div className="container">
           <a
-            href="/adatkezelesi_tajekoztato.pdf"
+            href="/booking_webapp_nullpontmuhely/adatkezelesi_tajekoztato.pdf"
             target="_blank"
             rel="noopener noreferrer"
             className="text-white-50"
